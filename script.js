@@ -36,17 +36,34 @@ const createTableBody = (table, data) => {
 
 const addTodo = () => {
     const task = document.querySelector('#task');
+    const edit = "Edit";
+    const del = "Delete";
+    const id = 1;
     const status = "To-Do";
     const table = document.getElementById('todo_table');
     const button = document.getElementById('add-button');
     button.onclick = () => {
         let tTask = document.createElement('td');
+        let tStatus = document.createElement('td');
+        let tId = document.createElement('td');
+        let editBtn = document.createElement('td');
+        let delBtn = document.createElement('td');
 
+        editBtn.textContent = edit;
+        delBtn.textContent = del;
+
+        tId.textContent = id;
         tTask.textContent = task.value;
+        tStatus.textContent = status;
 
         let tr = document.createElement('tr');
 
+        tr.appendChild(tId);
         tr.appendChild(tTask);
+        tr.appendChild(tStatus);
+        tr.appendChild(editBtn);
+        tr.appendChild(delBtn);
+
 
         table.appendChild(tr);
 
