@@ -33,12 +33,12 @@ const createTableBody = (table, data) => {
 };
 
 
-
+// add todo function
 const addTodo = () => {
     const task = document.querySelector('#task');
     const edit = "Edit";
     const del = "Delete";
-    const id = 1;
+    let id = 1;
     const status = "To-Do";
     const table = document.getElementById('todo_table');
     const button = document.getElementById('add-button');
@@ -67,7 +67,18 @@ const addTodo = () => {
 
         table.appendChild(tr);
 
+        const todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
+        todolist.push({
+            id: id,
+            task: task.value,
+            status: status,
+            edit: edit,
+            del: del
+        });
+        localStorage.setItem('todoTable', JSON.stringify(todolist));
+
         task.value = '';
+        id++;
     };
     
 
@@ -79,6 +90,9 @@ window.onload = () => {
 
     const todotable = createTable("todo_table");
     createTableHeader(todotable, todobaslik);
+    const todolist = localStorage.getItem('todoTable');
+    createTableBody(todotable, todolist ? JSON.parse(todolist) : []);
     addTodo();
+    
     
 };
