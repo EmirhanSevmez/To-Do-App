@@ -33,10 +33,35 @@ const createTableBody = (table, data) => {
 };
 
 
+
+const addTodo = () => {
+    const task = document.querySelector('#task');
+    const status = "To-Do";
+    const table = document.getElementById('todo_table');
+    const button = document.getElementById('add-button');
+    button.onclick = () => {
+        let tTask = document.createElement('td');
+
+        tTask.textContent = task.value;
+
+        let tr = document.createElement('tr');
+
+        tr.appendChild(tTask);
+
+        table.appendChild(tr);
+
+        task.value = '';
+    };
+    
+
+};
+
 //main function
 window.onload = () => {
     const todobaslik = ["ID", "Task", "Status", "Edit", "Delete"];
 
     const todotable = createTable("todo_table");
     createTableHeader(todotable, todobaslik);
+    addTodo();
+    
 };
