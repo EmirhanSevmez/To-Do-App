@@ -28,8 +28,14 @@ const createTableBody = (table, data) => {
             for (key in element) // each key in object
                 {
                     let cell = row.insertCell();
-                    let text = document.createTextNode(element[key]);
-                    cell.appendChild(text);
+                    if (key === 'del' || key === 'edit') {
+                        const button = document.createElement('button');
+                        button.textContent = element[key];
+                        cell.appendChild(button);
+                    } else {
+                        let text = document.createTextNode(element[key]);
+                        cell.appendChild(text);
+                    }
                 }
         }
 };
@@ -40,7 +46,7 @@ const addTodo = () => {
     const task = document.querySelector('#task'); // variables
     const edit = "Edit";
     const del = "Delete";
-    let id = 1;
+    let id = localStorage.getItem('lastId') || 1;
     const status = "To-Do";
     const table = document.getElementById('todo_table');
     const button = document.getElementById('add-button');
@@ -48,8 +54,8 @@ const addTodo = () => {
         let tTask = document.createElement('td'); // create td elements
         let tStatus = document.createElement('td');
         let tId = document.createElement('td');
-        let editBtn = document.createElement('td');
-        let delBtn = document.createElement('td');
+        let editBtn = document.createElement('button');
+        let delBtn = document.createElement('button');
 // set text content
         editBtn.textContent = edit;
         delBtn.textContent = del;
@@ -81,9 +87,26 @@ const addTodo = () => {
 
         task.value = '';
         id++;
-    };
-    
 
+        // save last id to local storage
+        localStorage.setItem('lastId', id);
+    };
+};
+
+// action todo function
+const TodoActions = () => {
+    const table = document.getElementById('todo_table');
+    table.addEventListener('click', (clicked) => {
+        if (clicked.target.textContent === 'Delete') {
+            const row = clicked.target.closest('tr'); 
+            row.remove(); 
+            const id = row.firstChild.textContent;
+            let todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
+            todolist = todolist.filter(item => item.id != id);
+            localStorage.setItem('todoTable', JSON.stringify(todolist));
+            
+        }
+    });
 };
 
 //main function
@@ -94,6 +117,6 @@ window.onload = () => {
     const todolist = localStorage.getItem('todoTable');
     createTableBody(todotable, todolist ? JSON.parse(todolist) : []);
     addTodo();
-    
+    TodoActions();
     
 };
