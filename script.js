@@ -28,7 +28,7 @@ const createTableBody = (table, data) => {
             for (key in element) // each key in object
                 {
                     let cell = row.insertCell();
-                    if (key === 'del' || key === 'edit') {
+                    if (key === 'del' || key === 'edit' || key === 'save') {
                         const button = document.createElement('button');
                         button.textContent = element[key];
                         cell.appendChild(button);
@@ -46,6 +46,7 @@ const addTodo = () => {
     const task = document.querySelector('#task'); // variables
     const edit = "Edit";
     const del = "Delete";
+    const save = "Save";
     let id = localStorage.getItem('lastId') || 1;
     const status = "To-Do";
     const table = document.getElementById('todo_table');
@@ -56,7 +57,9 @@ const addTodo = () => {
         let tId = document.createElement('td');
         let editBtn = document.createElement('button');
         let delBtn = document.createElement('button');
+        let saveBtn = document.createElement('button');
 // set text content
+        saveBtn.textContent = save;
         editBtn.textContent = edit;
         delBtn.textContent = del;
 
@@ -71,7 +74,7 @@ const addTodo = () => {
         tr.appendChild(tStatus);
         tr.appendChild(editBtn);
         tr.appendChild(delBtn);
-
+        tr.appendChild(saveBtn);
 
         table.appendChild(tr);
 // save to local storage
@@ -81,7 +84,8 @@ const addTodo = () => {
             task: task.value,
             status: status,
             edit: edit,
-            del: del
+            del: del,
+            save: save
         });
         localStorage.setItem('todoTable', JSON.stringify(todolist));
 
@@ -106,12 +110,38 @@ const TodoActions = () => {
             localStorage.setItem('todoTable', JSON.stringify(todolist));
             
         }
-    });
+        else if (clicked.target.textContent === 'Edit') {
+            const row = clicked.target.closest('tr'); 
+            const statusCell = row.children[2];
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = statusCell.textContent;
+            statusCell.textContent = '';
+            statusCell.appendChild(input);
+
+    }
+        else if (clicked.target.textContent === 'Save') {
+            const row = clicked.target.closest('tr');
+            const statusCell = row.children[2];
+            const input = statusCell.firstChild;
+            const newStatus = input.value;
+            statusCell.textContent = newStatus;
+            input.remove();
+            const id = row.firstChild.textContent;
+            let todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
+            todolist.forEach(item => {
+                if (item.id == id) {
+                    item.status = newStatus;
+                }
+            });
+            localStorage.setItem('todoTable', JSON.stringify(todolist));
+        }
+        });
 };
 
 //main function
 window.onload = () => {
-    const todobaslik = ["ID", "Task", "Status", "Edit", "Delete"];
+    const todobaslik = ["ID", "Task", "Status", "Edit", "Delete", "Save"];
     const todotable = createTable("todo_table");
     createTableHeader(todotable, todobaslik);
     const todolist = localStorage.getItem('todoTable');
