@@ -94,7 +94,10 @@ const addTodo = () => {
 
         // save last id to local storage
         localStorage.setItem('lastId', id);
+        location.reload();
     };
+    
+
 };
 
 // action todo function

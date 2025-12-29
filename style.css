@@ -1,0 +1,72 @@
+#add-todo{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+table  {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 8px;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 2px 2px 12px #aaa;
+    
+}
+td{
+    padding: 8px;   
+}
+
+th{
+    
+    padding: 8px;
+    background-color: lightgray;
+}
+tr{
+    text-align: center;
+    border: 1px solid gray;
+    background-color: white;
+    
+}
+
+body{
+    background-image: url(yavuzlar.png);
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center top;
+    margin-top: 250px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    
+}
+
+button  {
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background-color: lightgray;
+    cursor: pointer;
+}
+button:hover {
+    background-color: gray;
+    color: white;
+}
+button:active {
+    background-color: darkgray;
+}
+
+
+h1,h2,h3{
+    text-align: center;
+    text-shadow: 2px 2px 4px #aaa;
+}
+
+input{
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
