@@ -127,17 +127,18 @@ const TodoActions = () => {
             const row = clicked.target.closest('tr');
             const statusCell = row.children[2];
             const input = statusCell.firstChild;
-            const newStatus = input.value;
-            statusCell.textContent = newStatus;
-            input.remove();
-            const id = row.firstChild.textContent;
-            let todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
-            todolist.forEach(item => {
-                if (item.id == id) {
-                    item.status = newStatus;
-                }
-            });
-            localStorage.setItem('todoTable', JSON.stringify(todolist));
+            if (input && input.tagName === 'INPUT') {
+                const newStatus = input.value;
+                statusCell.textContent = newStatus;
+                const id = row.firstChild.textContent;
+                let todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
+                todolist.forEach(item => {
+                    if (item.id == id) {
+                        item.status = newStatus;
+                    }
+                });
+                localStorage.setItem('todoTable', JSON.stringify(todolist));
+            }
         }
         });
 };
