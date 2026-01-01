@@ -116,18 +116,24 @@ const TodoActions = () => {
         else if (clicked.target.textContent === 'Edit') {
             const row = clicked.target.closest('tr'); 
             const statusCell = row.children[2];
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = statusCell.textContent;
+            const Status = statusCell.textContent;
+            const input = document.createElement('select');
+            const options = ["To-Do", "In Progress", "Done"];
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if (opt === Status) option.selected = true;
+                input.appendChild(option);
+            });
             statusCell.textContent = '';
             statusCell.appendChild(input);
-
     }
         else if (clicked.target.textContent === 'Save') {
             const row = clicked.target.closest('tr');
             const statusCell = row.children[2];
             const input = statusCell.firstChild;
-            if (input && input.tagName === 'INPUT') {
+            if (input && (input.tagName === 'INPUT' || input.tagName === 'SELECT')) {
                 const newStatus = input.value;
                 statusCell.textContent = newStatus;
                 const id = row.firstChild.textContent;
