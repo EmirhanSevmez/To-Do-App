@@ -149,6 +149,33 @@ const TodoActions = () => {
         });
 };
 
+// search function
+const addSearch = () => {
+    const searchInput = document.querySelector('#search');
+    
+    const tableDiv = document.getElementById('todo_table');
+    const table = tableDiv.querySelector('table');
+    
+    tableDiv.insertBefore(searchInput, table);
+
+    searchInput.addEventListener('keyup', (e) => {
+        const term = e.target.value.toLowerCase();
+        const rows = table.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const taskCell = row.children[1]; 
+            if (taskCell) {
+                const taskText = taskCell.textContent.toLowerCase();
+                if (taskText.includes(term)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+    });
+};
+
 //main function
 window.onload = () => {
     const todobaslik = ["ID", "Task", "Status", "Edit", "Delete", "Save"];
@@ -158,5 +185,5 @@ window.onload = () => {
     createTableBody(todotable, todolist ? JSON.parse(todolist) : []);
     addTodo();
     TodoActions();
-    
+    addSearch();
 };

@@ -69,4 +69,17 @@ input{
     padding: 5px;
     border-radius: 5px;
     border: 1px solid black;
+    align-items: center;
+}
+
+#search_input{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    text-align: center;
+}
+#search {
+    display: block;
+    margin: 20px auto; 
+    box-sizing: border-box; 
 }
