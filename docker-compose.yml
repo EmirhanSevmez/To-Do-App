@@ -1,25 +1,50 @@
 services:
-  db:
-    container_name: todo-database
+  database:
+    container_name: database
     image: postgres:latest
     restart: always
     environment:
       - POSTGRES_DB=tododb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin1234
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
     networks:
-      - apiprogram
-  api:
-    container_name: todo-api
+      static:
+        ipv4_address: 172.20.0.2
+
+
+
+  backend:
+    container_name: backend
     build:
-      context: .
+      context: ./backend
     ports:
       - 8080:8080
     restart: always
-    depends_on:
-      - db
     networks:
-      - apiprogram
+      - static
+    depends_on:
+      - database
 
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    ports:
+      - 3000:80
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - static
+
+volumes:
+  db_data:
 networks:
-  apiprogram:
+    static:
+      ipam:
+        config:
+          - subnet: 172.20.0.0/16
