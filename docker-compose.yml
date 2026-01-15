@@ -11,10 +11,6 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    networks:
-      static:
-        ipv4_address: 172.20.0.2
-
 
 
   backend:
@@ -24,8 +20,6 @@ services:
     ports:
       - 8080:8080
     restart: always
-    networks:
-      - static
     depends_on:
       - database
 
@@ -38,13 +32,6 @@ services:
     depends_on:
       - backend
     restart: always
-    networks:
-      - static
 
 volumes:
   db_data:
-networks:
-    static:
-      ipam:
-        config:
-          - subnet: 172.20.0.0/16
