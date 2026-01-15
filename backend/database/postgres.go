@@ -11,7 +11,7 @@ import (
 
 var DB *gorm.DB
 
-func connectDB() {
+func ConnectDB() {
 	dsn := "host=todo-database password=admin1234 dbname=tododb port=5432 sslmode=disable" //change this later
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
