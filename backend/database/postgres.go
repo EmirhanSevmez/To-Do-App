@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"os"
 	"todoapi/models"
 
 	"gorm.io/driver/postgres"
@@ -11,8 +12,29 @@ import (
 
 var DB *gorm.DB
 
+func getEnv(key, fallback string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+	return value
+}
+
 func ConnectDB() {
-	dsn := "host=host.docker.internal user=postgres password=admin1234 dbname=tododb port=5432 sslmode=disable" //change this later
+	host := getEnv("DB_HOST", "database")
+	port := getEnv("DB_PORT", "5432")
+	user := getEnv("DB_USER", "postgres")
+	password := getEnv("DB_PASS", "admin1234")
+	dbName := getEnv("DB_NAME", "tododb")
+
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		host,
+		user,
+		password,
+		dbName,
+		port,
+	)
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
