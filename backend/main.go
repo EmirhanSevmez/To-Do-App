@@ -14,10 +14,10 @@ func main() {
 
 	api := router.Group("/api/v1")
 	{
-		api.Group("/auth")
+		auth := api.Group("/auth")
 		{
-			api.POST("/register", controllers.RegisterUser)
-			api.POST("/token", controllers.GenerateToken)
+			auth.POST("/register", controllers.RegisterUser)
+			auth.POST("/token", controllers.GenerateToken)
 		}
 		secured := api.Group("/secured").Use(middlewares.AuthMiddleware())
 		{
