@@ -83,3 +83,13 @@ input{
     margin: 20px auto; 
     box-sizing: border-box; 
 }
+#login-form{
+    text-align: center;
+    margin-top: 100px;
+}
+#login-form input{
+    margin: 10px;
+}
+#login-form button{
+    margin-top: 20px;
+}  
