@@ -1,188 +1,200 @@
-// create table
+const API_URL = '/api/v1/secured/todos';
+
 const createTable = (divID) => {
-    const tableElement = document.createElement('table'); 
+    const tableElement = document.createElement('table');
     const tableDiv = document.getElementById(divID);
+    tableDiv.innerHTML = '';
     tableDiv.appendChild(tableElement);
     return tableElement;
 };
 
-// create table header
 const createTableHeader = (table, data) => {
     const TableHeader = table.createTHead();
-    const row = TableHeader.insertRow(); 
-    for (let element of data)
-        {
-            let title = document.createTextNode(element);
-            let th = document.createElement("th");
-            th.appendChild(title);
-            row.appendChild(th);
-        }
+    const row = TableHeader.insertRow();
+    for (let element of data) {
+        let title = document.createTextNode(element);
+        let th = document.createElement("th");
+        th.appendChild(title);
+        row.appendChild(th);
+    }
 };
 
-// create table body
 const createTableBody = (table, data) => {
     const TableBody = table.createTBody();
-    for (let element of data) // each object in array
-        {
-            let row = TableBody.insertRow();
-            for (key in element) // each key in object
-                {
-                    let cell = row.insertCell();
-                    if (key === 'del' || key === 'edit' || key === 'save') {
-                        const button = document.createElement('button');
-                        button.textContent = element[key];
-                        cell.appendChild(button);
-                    } else {
-                        let text = document.createTextNode(element[key]);
-                        cell.appendChild(text);
-                    }
-                }
-        }
-};
+    for (let element of data) {
+        let row = TableBody.insertRow();
 
+        let cellId = row.insertCell();
+        cellId.textContent = element.id.substring(0, 8);
 
-// add todo function
-const addTodo = () => {
-    const task = document.querySelector('#task'); // variables
-    const edit = "Edit";
-    const del = "Delete";
-    const save = "Save";
-    let id = localStorage.getItem('lastId') || 1;
-    const status = "To-Do";
-    const table = document.getElementById('todo_table');
-    const button = document.getElementById('add-button');
-    button.onclick = () => { // submit
-        let tTask = document.createElement('td'); // create td elements
-        let tStatus = document.createElement('td');
-        let tId = document.createElement('td');
+        let cellTask = row.insertCell();
+        cellTask.textContent = element.title;
+
+        let cellStatus = row.insertCell();
+        cellStatus.textContent = element.completed ? "Done" : "To-Do";
+
+        let cellEdit = row.insertCell();
         let editBtn = document.createElement('button');
+        editBtn.textContent = "Edit";
+        cellEdit.appendChild(editBtn);
+
+        let cellDel = row.insertCell();
         let delBtn = document.createElement('button');
+        delBtn.textContent = "Delete";
+        cellDel.appendChild(delBtn);
+
+        let cellSave = row.insertCell();
         let saveBtn = document.createElement('button');
-// set text content
-        saveBtn.textContent = save;
-        editBtn.textContent = edit;
-        delBtn.textContent = del;
+        saveBtn.textContent = "Save";
+        cellSave.appendChild(saveBtn);
 
-        tId.textContent = id;
-        tTask.textContent = task.value;
-        tStatus.textContent = status;
-
-        let tr = document.createElement('tr');
-// append td to tr
-        tr.appendChild(tId);
-        tr.appendChild(tTask);
-        tr.appendChild(tStatus);
-        tr.appendChild(editBtn);
-        tr.appendChild(delBtn);
-        tr.appendChild(saveBtn);
-
-        table.appendChild(tr);
-// save to local storage
-        const todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
-        todolist.push({
-            id: id,
-            task: task.value,
-            status: status,
-            edit: edit,
-            del: del,
-            save: save
-        });
-        localStorage.setItem('todoTable', JSON.stringify(todolist));
-
-        task.value = '';
-        id++;
-
-        // save last id to local storage
-        localStorage.setItem('lastId', id);
-        location.reload();
-    };
-    
-
+        row.dataset.id = element.id;
+    }
 };
 
-// action todo function
-const TodoActions = () => {
-    const table = document.getElementById('todo_table');
-    table.addEventListener('click', (clicked) => {
-        if (clicked.target.textContent === 'Delete') {
-            const row = clicked.target.closest('tr'); 
-            row.remove(); 
-            const id = row.firstChild.textContent;
-            let todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
-            todolist = todolist.filter(item => item.id != id);
-            localStorage.setItem('todoTable', JSON.stringify(todolist));
-            
+const fetchTodos = async (search = '') => {
+    try {
+        let url = API_URL;
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
         }
-        else if (clicked.target.textContent === 'Edit') {
-            const row = clicked.target.closest('tr'); 
+        const response = await fetch(url, { credentials: 'include' });
+        if (!response.ok) return;
+        const data = await response.json();
+        renderTable(data);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const renderTable = (data) => {
+    const todobaslik = ["ID", "Task", "Status", "Edit", "Delete", "Save"];
+    const todotable = createTable("todo_table");
+    createTableHeader(todotable, todobaslik);
+    createTableBody(todotable, data);
+};
+
+const addTodo = () => {
+    const taskInput = document.querySelector('#task');
+    const button = document.getElementById('add-button');
+
+    button.onclick = async () => {
+        const title = taskInput.value;
+        if (!title) return;
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ title: title, completed: false })
+            });
+            if (response.ok) {
+                taskInput.value = '';
+                fetchTodos();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+};
+
+const deleteTodo = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        if (response.ok) {
+            fetchTodos();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const updateTodo = async (id, title, completed) => {
+    try {
+        await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ title: title, completed: completed })
+        });
+        fetchTodos();
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const TodoActions = () => {
+    const tableDiv = document.getElementById('todo_table');
+    tableDiv.addEventListener('click', (clicked) => {
+        const target = clicked.target;
+        const row = target.closest('tr');
+        if (!row) return;
+        const id = row.dataset.id;
+
+        if (target.textContent === 'Delete') {
+            deleteTodo(id);
+        } else if (target.textContent === 'Edit') {
             const statusCell = row.children[2];
-            const Status = statusCell.textContent;
-            const input = document.createElement('select');
-            const options = ["To-Do", "In Progress", "Done"];
+            const currentStatus = statusCell.textContent;
+
+            const select = document.createElement('select');
+            const options = ["To-Do", "Done"];
             options.forEach(opt => {
                 const option = document.createElement('option');
                 option.value = opt;
                 option.textContent = opt;
-                if (opt === Status) option.selected = true;
-                input.appendChild(option);
+                if (opt === currentStatus) option.selected = true;
+                select.appendChild(option);
             });
             statusCell.textContent = '';
-            statusCell.appendChild(input);
-    }
-        else if (clicked.target.textContent === 'Save') {
-            const row = clicked.target.closest('tr');
+            statusCell.appendChild(select);
+
+            const taskCell = row.children[1];
+            const currentTask = taskCell.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentTask;
+            taskCell.textContent = '';
+            taskCell.appendChild(input);
+
+        } else if (target.textContent === 'Save') {
             const statusCell = row.children[2];
-            const input = statusCell.firstChild;
-            if (input && (input.tagName === 'INPUT' || input.tagName === 'SELECT')) {
-                const newStatus = input.value;
-                statusCell.textContent = newStatus;
-                const id = row.firstChild.textContent;
-                let todolist = JSON.parse(localStorage.getItem('todoTable')) || [];
-                todolist.forEach(item => {
-                    if (item.id == id) {
-                        item.status = newStatus;
-                    }
-                });
-                localStorage.setItem('todoTable', JSON.stringify(todolist));
+            const taskCell = row.children[1];
+
+            let newStatus = statusCell.textContent;
+            let newTask = taskCell.textContent;
+
+            const statusInput = statusCell.querySelector('select');
+            if (statusInput) {
+                newStatus = statusInput.value;
             }
+
+            const taskInput = taskCell.querySelector('input');
+            if (taskInput) {
+                newTask = taskInput.value;
+            }
+
+            const completed = newStatus === "Done";
+            updateTodo(id, newTask, completed);
         }
-        });
-};
-
-// search function
-const addSearch = () => {
-    const searchInput = document.querySelector('#search');
-    
-    const tableDiv = document.getElementById('todo_table');
-    const table = tableDiv.querySelector('table');
-    
-    tableDiv.insertBefore(searchInput, table);
-
-    searchInput.addEventListener('keyup', (e) => {
-        const term = e.target.value.toLowerCase();
-        const rows = table.querySelectorAll('tbody tr');
-        
-        rows.forEach(row => {
-            const taskCell = row.children[1]; 
-            if (taskCell) {
-                const taskText = taskCell.textContent.toLowerCase();
-                if (taskText.includes(term)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            }
-        });
     });
 };
 
-//main function
+const addSearch = () => {
+    const searchInput = document.querySelector('#search');
+    const searchButton = document.querySelector('#search-button');
+
+    searchButton.addEventListener('click', () => {
+        fetchTodos(searchInput.value);
+    });
+};
+
 window.onload = () => {
-    const todobaslik = ["ID", "Task", "Status", "Edit", "Delete", "Save"];
-    const todotable = createTable("todo_table");
-    createTableHeader(todotable, todobaslik);
-    const todolist = localStorage.getItem('todoTable');
-    createTableBody(todotable, todolist ? JSON.parse(todolist) : []);
+    fetchTodos();
     addTodo();
     TodoActions();
     addSearch();

@@ -9,6 +9,7 @@ type User struct {
 	gorm.Model
 	Username string `gorm:"unique;not null" json:"username"`
 	Password string `json:"password"`
+	Todos    []Todo `json:"todos"`
 }
 
 func (user *User) HashPassword(password string) error {

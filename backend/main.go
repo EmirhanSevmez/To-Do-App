@@ -36,6 +36,10 @@ func main() {
 		secured := api.Group("/secured").Use(middlewares.AuthMiddleware())
 		{
 			secured.GET("/ping", controllers.Ping)
+			secured.GET("/todos", controllers.GetTodos)
+			secured.POST("/todos", controllers.CreateTodo)
+			secured.PUT("/todos/:id", controllers.UpdateTodo)
+			secured.DELETE("/todos/:id", controllers.DeleteTodo)
 		}
 
 	}
