@@ -32,6 +32,7 @@ func main() {
 		{
 			auth.POST("/register", controllers.RegisterUser)
 			auth.POST("/token", controllers.GenerateToken)
+			auth.GET("/logout", controllers.Logout)
 		}
 		secured := api.Group("/secured").Use(middlewares.AuthMiddleware())
 		{

@@ -1,95 +1,135 @@
-#add-todo{
-    margin-top: 20px;
-    margin-bottom: 20px;
-    align-items: center;
-    text-align: center;
-}
-
-table  {
-    border: 1px solid black;
-    border-collapse: collapse;
-    padding: 8px;
-    width: 100%;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 2px 2px 12px #aaa;
-    
-}
-td{
-    padding: 8px;   
-}
-
-th{
-    
-    padding: 8px;
-    background-color: lightgray;
-}
-tr{
-    text-align: center;
-    border: 1px solid gray;
-    background-color: white;
-    
-}
-
-body{
+body {
     background-image: url(yavuzlar.png);
     background-size: 50%;
     background-repeat: no-repeat;
     background-position: center top;
-    margin-top: 250px;
     font-family: 'Times New Roman', Times, serif;
     font-size: 20px;
-    
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
 }
 
-button  {
+.login,
+.register {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+    margin-top: 150px;
+}
+
+#login-form,
+#register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#login-form input,
+#register-form input {
+    margin: 10px 0;
+    width: 90%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#login-form button,
+#register-form button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    font-size: 16px;
+}
+
+#login-form button:hover,
+#register-form button:hover {
+    background-color: #555;
+    transform: translateY(-1px);
+}
+
+
+button {
     margin: 5px;
     padding: 5px;
     border-radius: 5px;
     border: 1px solid black;
     background-color: lightgray;
     cursor: pointer;
+    transition: all 0.2s;
 }
+
 button:hover {
     background-color: gray;
     color: white;
 }
+
 button:active {
     background-color: darkgray;
 }
 
-
-h1,h2,h3{
+h1,
+h2,
+h3 {
     text-align: center;
     text-shadow: 2px 2px 4px #aaa;
 }
 
-input{
+input {
     padding: 5px;
     border-radius: 5px;
     border: 1px solid black;
     align-items: center;
 }
 
-#search_input{
+#search_input {
     margin-top: 20px;
     margin-bottom: 20px;
     align-items: center;
     text-align: center;
 }
+
 #search {
-    display: block;
-    margin: 20px auto; 
-    box-sizing: border-box; 
-}
-#login-form{
-    text-align: center;
-    margin-top: 100px;
-}
-#login-form input{
+    display: inline-block;
     margin: 10px;
 }
-#login-form button{
+
+#add-todo {
     margin-top: 20px;
-}  
+    margin-bottom: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 8px;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 2px 2px 12px #aaa;
+    background-color: white;
+}
+
+td {
+    padding: 8px;
+}
+
+th {
+    padding: 8px;
+    background-color: lightgray;
+}
+
+tr {
+    text-align: center;
+    border: 1px solid gray;
+    background-color: white;
+}

@@ -41,3 +41,8 @@ func GenerateToken(c *gin.Context) {
 	c.SetCookie("token", tokenString, 3600, "/", "", false, true)
 	c.JSON(http.StatusOK, gin.H{"token": tokenString})
 }
+
+func Logout(c *gin.Context) {
+	c.SetCookie("token", "", -1, "/", "", false, true)
+	c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully"})
+}

@@ -15,6 +15,8 @@
 <body>
     <h1>Welcome to To-Do App</h1>
     <h3>Author: Emirhan Sevmez</h3>
+    <button id="logout-button"
+        style="position: absolute; top: 10px; right: 10px; background-color: #ff4444; color: white;">Logout</button>
     <div id="add-todo">
         <label for="task">Task:</label>
         <input type="text" id="task" name="task" placeholder="Hack NASA">
@@ -28,6 +30,18 @@
 
     <div id="todo_table"></div>
 
+    <script>
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/v1/auth/logout', { credentials: 'include' });
+                if (response.ok) {
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        });
+    </script>
 </body>
 
 </html>
