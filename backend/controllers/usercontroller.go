@@ -21,7 +21,11 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	database.DB.Create(&user)
+	record := database.DB.Create(&user)
+	if record.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
 }

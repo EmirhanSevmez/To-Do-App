@@ -8,13 +8,13 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenString := c.GetHeader("Authorization")
-		if tokenString == "" {
+		tokenString, err := c.Cookie("token")
+		if err != nil {
 			c.JSON(401, gin.H{"error": "request does not contain an access token"})
 			c.Abort()
 			return
 		}
-		err := auth.ValidateToken(tokenString)
+		err = auth.ValidateToken(tokenString)
 		if err != nil {
 			c.JSON(401, gin.H{"error": err.Error()})
 			c.Abort()

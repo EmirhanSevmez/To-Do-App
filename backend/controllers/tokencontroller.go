@@ -37,7 +37,7 @@ func GenerateToken(c *gin.Context) {
 		return
 	}
 
-	c.SetSameSite(http.SameSiteStrictMode)
-	c.SetCookie("token", tokenString, 3600, "/", "localhost", false, true)
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("token", tokenString, 3600, "/", "", false, true)
 	c.JSON(http.StatusOK, gin.H{"token": tokenString})
 }
